@@ -3,31 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Werkdonalds POS v19</title>
+<title>Werkdonalds POS v20</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f2f4f8;color:#1e2022}
-
-/* Header */
 header{height:70px;background:#0066ff;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 3px 12px rgba(0,102,255,0.25);position:sticky;top:0;z-index:50}
 .brand{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:900}
-.brand-logo-badge{width:44px;height:44px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,0.15)}
+.brand-logo-badge{width:44px;height:44px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center}
 .brand-logo-badge svg{width:30px;height:30px}
 .brand small{font-size:11px;background:#ffbc0d;color:#111;padding:4px 8px;border-radius:6px;font-weight:800}
 .header-right{display:flex;gap:10px;align-items:center}
 .connection{display:flex;gap:7px;align-items:center;font-size:12px;font-weight:700;background:rgba(255,255,255,0.18);padding:6px 14px;border-radius:20px;cursor:pointer}
 .connection #dot{width:9px;height:9px;border-radius:50%;background:#35c759}
 .user-badge{background:rgba(255,255,255,0.2);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
-
-/* Navigatie */
 nav{height:52px;background:#fff;border-bottom:1px solid #e1e4e8;display:flex;gap:6px;padding:6px 16px;align-items:center;overflow-x:auto}
 nav button{border:0;background:#f0f2f5;color:#444;border-radius:8px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
-nav button.active{background:#ffbc0d;color:#111;box-shadow:0 2px 6px rgba(255,188,13,0.3)}
+nav button.active{background:#ffbc0d;color:#111}
 nav button.locked{opacity:0.35;cursor:not-allowed}
 .nav b{background:#0066ff;color:#fff;border-radius:99px;padding:1px 6px;font-size:11px}
-
-/* Layout */
 main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 122px)}
 .screen{display:none;padding:16px;overflow-y:auto;height:100%}
 .screen.active{display:block}
@@ -37,15 +31,13 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 
 .btn-blue{background:#0066ff;color:#fff;border:none;padding:9px 13px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
 .btn-yellow{background:#ffbc0d;color:#111;border:none;padding:9px 12px;border-radius:10px;font-weight:800;cursor:pointer}
 .search-bar{width:100%;max-width:260px;padding:9px 14px;border:1px solid #dce0e5;border-radius:10px;font-size:13px;outline:none}
-.busy-meter{background:#fff;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:800;border:1px solid #e2e8f0;display:flex;align-items:center;gap:6px}
+.busy-meter{background:#fff;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:800;border:1px solid #e2e8f0}
 .order-stop-banner{background:#0066ff;color:#fff;padding:14px;border-radius:12px;margin-bottom:14px;font-weight:800;text-align:center}
-
-/* Producten & Categorieën */
 .categories{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
 .categories button{border:1px solid #e1e4e8;padding:8px 14px;border-radius:10px;background:#fff;cursor:pointer;font-weight:700;font-size:12px;white-space:nowrap}
 .categories button.active{background:#ffbc0d;border-color:#d49b00;color:#111}
 .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.product{background:#fff;border-radius:14px;padding:12px;min-height:150px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.04);display:flex;flex-direction:column;justify-content:space-between;position:relative;border:2px solid transparent;transition:0.15s}
+.product{background:#fff;border-radius:14px;padding:12px;min-height:150px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.04);display:flex;flex-direction:column;justify-content:space-between;position:relative;border:2px solid transparent}
 .product:hover{border-color:#ffbc0d;transform:translateY(-2px)}
 .product.out-of-stock{opacity:0.4;filter:grayscale(1);pointer-events:none}
 .out-badge, .sale-badge{position:absolute;top:8px;color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px}
@@ -56,8 +48,6 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 
 .price-container{display:flex;align-items:baseline;gap:6px}
 .price{font-weight:900;color:#0066ff;font-size:16px}
 .old-price{color:#94a3b8;font-size:12px;text-decoration:line-through}
-
-/* Winkelwagen */
 .cart{background:#fff;border-left:1px solid #e1e4e8;display:flex;flex-direction:column;height:100%}
 .cartHead{padding:14px 16px;border-bottom:1px solid #eef0f3;display:flex;justify-content:space-between;align-items:center}
 .cartHead h2{margin:0;font-size:18px;font-weight:800}
@@ -146,7 +136,7 @@ body.tv-pickup-active .pickup-num{font-size:52px!important;padding:20px 10px!imp
 .btn-exit-tv{display:none;position:fixed;bottom:15px;right:15px;background:rgba(0,0,0,0.6);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;z-index:999}
 body.tv-pickup-active .btn-exit-tv{display:block}
 
-/* Manager & Admin */
+/* Manager & Modals */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
 .stats div{background:#fff;padding:14px;border-radius:12px}
 .stats strong{display:block;font-size:22px;margin-top:4px;font-weight:900}
@@ -161,8 +151,8 @@ body.tv-pickup-active .btn-exit-tv{display:block}
 .checkbox-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:8px;background:#f8f9fa;padding:12px;border-radius:10px}
 .checkbox-label{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;font-weight:600}
 
-#modalBackdrop, #paymentModalBackdrop, #receiptModalBackdrop, #zReportModalBackdrop, #editUserModalBackdrop, #editProductModalBackdrop, #editCouponModalBackdrop, #kioskModalBackdrop, #adminCouponModalBackdrop, #burgerBuilderModalBackdrop, #customConfirmModalBackdrop, #customItemModalBackdrop, #addInventoryModalBackdrop{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(3px);z-index:99;align-items:center;justify-content:center}
-#modalBackdrop.show, #paymentModalBackdrop.show, #receiptModalBackdrop.show, #zReportModalBackdrop.show, #editUserModalBackdrop.show, #editProductModalBackdrop.show, #editCouponModalBackdrop.show, #kioskModalBackdrop.show, #adminCouponModalBackdrop.show, #burgerBuilderModalBackdrop.show, #customConfirmModalBackdrop.show, #customItemModalBackdrop.show, #addInventoryModalBackdrop.show{display:flex}
+#modalBackdrop, #paymentModalBackdrop, #receiptModalBackdrop, #zReportModalBackdrop, #editUserModalBackdrop, #editProductModalBackdrop, #kioskModalBackdrop, #adminCouponModalBackdrop, #burgerBuilderModalBackdrop, #customConfirmModalBackdrop, #customItemModalBackdrop, #addInventoryModalBackdrop{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(3px);z-index:99;align-items:center;justify-content:center}
+#modalBackdrop.show, #paymentModalBackdrop.show, #receiptModalBackdrop.show, #zReportModalBackdrop.show, #editUserModalBackdrop.show, #editProductModalBackdrop.show, #kioskModalBackdrop.show, #adminCouponModalBackdrop.show, #burgerBuilderModalBackdrop.show, #customConfirmModalBackdrop.show, #customItemModalBackdrop.show, #addInventoryModalBackdrop.show{display:flex}
 .modal{background:#fff;padding:24px;border-radius:16px;width:92%;max-width:440px;max-height:88vh;overflow-y:auto}
 .modal h2{margin-top:0;margin-bottom:12px;font-weight:800}
 .modal input, .modal select{width:100%;padding:10px 12px;margin-bottom:10px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px}
@@ -186,7 +176,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
       </svg>
     </div>
     <span>Werkdonalds</span>
-    <small>POS v19</small>
+    <small>POS</small>
   </div>
   <div class="header-right">
     <div class="connection" onclick="showConnectionDiagnostic()"><span id="dot"></span><span id="connection">Verbinden...</span></div>
@@ -264,9 +254,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   </div>
 
   <div class="admin-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <h3 style="margin:0">Live Grondstoffen & Magazijn</h3>
-    </div>
+    <h3 style="margin:0 0 10px 0">Live Grondstoffen & Magazijn</h3>
     <table class="data-table">
       <thead><tr><th>Grondstof / Item</th><th>Aantal op voorraad</th><th>Min. Voorraad</th><th>Leverancier</th><th>Status</th><th>Bijbestellen</th></tr></thead>
       <tbody id="inventoryTableBody"></tbody>
@@ -316,7 +304,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
 
   <!-- NIEUW PRODUCT TOEVOEGEN -->
   <div class="admin-card">
-    <h3>➕ Nieuw Gerecht of Snack Toevoegen aan Menu (Cloud Sync)</h3>
+    <h3>➕ Nieuw Gerecht of Snack Toevoegen (Cloud Sync)</h3>
     <div class="admin-grid">
       <div><label>Productnaam:</label><input type="text" id="newProdName" placeholder="bv. WerkRib"></div>
       <div><label>Reguliere Prijs (€):</label><input type="number" step="0.05" id="newProdPrice" placeholder="5.95"></div>
@@ -501,24 +489,32 @@ body.tv-pickup-active .btn-exit-tv{display:block}
         <div class="kiosk-card" id="kioskOptLarge" onclick="setKioskMenuSize('large')"><h4>Groot Menu</h4><span id="kioskLargePrice">+ € 5,40</span></div>
       </div>
     </div>
+    
     <div class="kiosk-section" id="kioskSideSection" style="display:none;">
       <div class="kiosk-section-title">🍟 Kies Bijgerecht</div>
       <div class="kiosk-cards">
-        <div class="kiosk-card selected" id="side_fries" onclick="setKioskSide('Franse Friet')"><h4>Franse Friet</h4><span>Inbegrepen</span></div>
-        <div class="kiosk-card" id="side_twister" onclick="setKioskSide('Twister Friet (+€0,60)')"><h4>Twister Friet</h4><span>+ € 0,60</span></div>
-        <div class="kiosk-card" id="side_salad" onclick="setKioskSide('Side Salad')"><h4>Side Salad</h4><span>Inbegrepen</span></div>
+        <div class="kiosk-card selected" id="side_fries" onclick="setKioskSide('Franse Friet', 0, this)"><h4>Franse Friet</h4><span>Inbegrepen</span></div>
+        <div class="kiosk-card" id="side_twister" onclick="setKioskSide('Twister Friet', 0.60, this)"><h4>Twister Friet</h4><span>+ € 0,60</span></div>
+        <div class="kiosk-card" id="side_boeren" onclick="setKioskSide('Boerenfriet Mayo', 0.80, this)"><h4>Boerenfriet</h4><span>+ € 0,80</span></div>
+        <div class="kiosk-card" id="side_salad" onclick="setKioskSide('Side Salad', 0, this)"><h4>Side Salad</h4><span>Inbegrepen</span></div>
       </div>
     </div>
+
     <div class="kiosk-section" id="kioskDrinkSection" style="display:none;">
-      <div class="kiosk-section-title">🥤 Kies Drankje</div>
+      <div class="kiosk-section-title">🥤 Kies Drankje of Milkshake</div>
       <div class="kiosk-cards">
-        <div class="kiosk-card selected" id="dr_cola_zero" onclick="setKioskDrink('Cola Zero')"><h4>Cola Zero</h4></div>
-        <div class="kiosk-card" id="dr_cola" onclick="setKioskDrink('Coca-Cola')"><h4>Coca-Cola</h4></div>
-        <div class="kiosk-card" id="dr_fanta" onclick="setKioskDrink('Fanta')"><h4>Fanta</h4></div>
-        <div class="kiosk-card" id="dr_sprite" onclick="setKioskDrink('Sprite')"><h4>Sprite</h4></div>
-        <div class="kiosk-card" id="dr_shake" onclick="setKioskDrink('Milkshake (+€0,80)')"><h4>Milkshake</h4><span>+ € 0,80</span></div>
+        <div class="kiosk-card selected" id="dr_cola_zero" onclick="setKioskDrink('Cola Zero', 0, this)"><h4>Cola Zero</h4></div>
+        <div class="kiosk-card" id="dr_cola" onclick="setKioskDrink('Coca-Cola', 0, this)"><h4>Coca-Cola</h4></div>
+        <div class="kiosk-card" id="dr_fanta" onclick="setKioskDrink('Fanta', 0, this)"><h4>Fanta</h4></div>
+        <div class="kiosk-card" id="dr_sprite" onclick="setKioskDrink('Sprite', 0, this)"><h4>Sprite</h4></div>
+        <div class="kiosk-card" id="dr_fuze" onclick="setKioskDrink('Fuze Tea', 0, this)"><h4>Fuze Tea</h4></div>
+        <div class="kiosk-card" id="dr_shake_aardbei" onclick="setKioskDrink('Milkshake Aardbei', 0.80, this)"><h4>Shake Aardbei</h4><span>+ € 0,80</span></div>
+        <div class="kiosk-card" id="dr_shake_choco" onclick="setKioskDrink('Milkshake Choco', 0.80, this)"><h4>Shake Choco</h4><span>+ € 0,80</span></div>
+        <div class="kiosk-card" id="dr_shake_vanille" onclick="setKioskDrink('Milkshake Vanille', 0.80, this)"><h4>Shake Vanille</h4><span>+ € 0,80</span></div>
+        <div class="kiosk-card" id="dr_shake_banaan" onclick="setKioskDrink('Milkshake Banaan', 0.80, this)"><h4>Shake Banaan</h4><span>+ € 0,80</span></div>
       </div>
     </div>
+
     <div class="kiosk-section" id="kioskSauceSection" style="display:none;">
       <div class="kiosk-section-title">🥫 Kies je Saus</div>
       <div class="kiosk-cards">
@@ -528,6 +524,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
         <div class="kiosk-card" id="sc_mayo" onclick="setKioskSauce('Fritessaus')"><h4>Fritessaus</h4></div>
       </div>
     </div>
+    
     <div class="kiosk-section" id="kioskDrinkOptionSection" style="display:none;">
       <div class="kiosk-section-title">🧊 IJsblokjes</div>
       <div class="kiosk-cards">
@@ -535,6 +532,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
         <div class="kiosk-card" id="ice_no" onclick="setKioskIce(false)"><h4>Zonder IJs</h4></div>
       </div>
     </div>
+    
     <div class="kiosk-section" id="kioskHappyToySection" style="display:none;">
       <div class="kiosk-section-title">🎁 Kies je Cadeautje</div>
       <div class="kiosk-cards">
@@ -543,6 +541,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
         <div class="kiosk-card" id="toy_book" onclick="setHappyToy('📖 Boekje')"><h4>📖 Boekje</h4></div>
       </div>
     </div>
+    
     <div class="kiosk-section" id="kioskCustomSection">
       <div class="kiosk-section-title">✏️ Ingrediënten Aanpassen</div>
       <div class="kiosk-matrix">
@@ -551,6 +550,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
         <div class="kiosk-item-row"><span>🧀 Kaas</span><div class="kiosk-btn-group"><button class="active" id="btn_cheese_norm" onclick="setKioskCust('cheese', 'normaal')">Normaal</button><button id="btn_cheese_no" onclick="setKioskCust('cheese', 'zonder')">Zonder</button><button id="btn_cheese_extra" onclick="setKioskCust('cheese', 'extra')">+ €0,60</button></div></div>
       </div>
     </div>
+    
     <div class="kiosk-section">
       <div class="kiosk-section-title">📝 Speciale Wens</div>
       <input type="text" id="kioskCustomNote" placeholder="bv. Extra heet, saus apart..." style="width:100%;padding:8px;border:1px solid #ccc;border-radius:8px;">
@@ -761,7 +761,7 @@ function startTvPickupMode() {
   AudioFX.init();
   document.body.classList.add("tv-pickup-active");
   try { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); } catch(e){}
-  toast("📺 TV Modus actief (0 knoppen). Druk rechtsonder op sluiten om af te sluiten.");
+  toast("📺 TV Modus actief. Druk rechtsonder op sluiten om af te sluiten.");
 }
 
 function exitTvPickupMode() {
@@ -907,7 +907,19 @@ let stats = JSON.parse(localStorage.getItem("wd_stats") || '{"revenue":0,"sales"
 
 // Kiosk State
 let currentKioskProduct = null;
-let kioskState = { menuSize: "single", side: "Franse Friet", drink: "Cola Zero", happyToy: "🧸 Speeltje", sauce: "Zoetzure Saus", ice: true, customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, customNote: "", qty: 1 };
+let kioskState = { 
+  menuSize: "single", 
+  side: "Franse Friet", 
+  sideExtra: 0, 
+  drink: "Cola Zero", 
+  drinkExtra: 0, 
+  happyToy: "🧸 Speeltje", 
+  sauce: "Zoetzure Saus", 
+  ice: true, 
+  customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, 
+  customNote: "", 
+  qty: 1 
+};
 let builderState = { bun: { name: "Sesambroodje", extra: 0 }, patty: { name: "100% Rundvlees", extra: 0 }, sauce: { name: "Special Saus", extra: 0 } };
 
 function getActivePrice(p) { return (p.onSale && p.salePrice > 0) ? p.salePrice : p.price; }
@@ -929,18 +941,15 @@ function updateBusyMeters() {
   });
 }
 
-// AUTOMATISCHE VOORRAADAFTREK
 function deductInventoryForOrder(orderItems) {
   let changed = false;
   orderItems.forEach(item => {
     const name = item.name.toLowerCase();
     const qty = item.qty || 1;
 
-    // Broodjes & patties
     if (name.includes("burger") || name.includes("werkmac") || name.includes("quarter") || name.includes("werktasty")) {
       const bun = inventory.find(i => i.item_name.includes("Broodjes"));
       if (bun && bun.stock_qty >= qty) { bun.stock_qty -= qty; changed = true; }
-      
       const beef = inventory.find(i => i.item_name.includes("Rundvlees"));
       if (beef && beef.stock_qty >= qty) { beef.stock_qty -= (name.includes("double") ? qty * 2 : qty); changed = true; }
     }
@@ -950,19 +959,16 @@ function deductInventoryForOrder(orderItems) {
       if (chicken && chicken.stock_qty >= qty) { chicken.stock_qty -= qty; changed = true; }
     }
 
-    // Friet
     if (name.includes("friet") || name.includes("menu")) {
       const fries = inventory.find(i => i.item_name.includes("Friet"));
       if (fries && fries.stock_qty > 0) { fries.stock_qty = Math.max(0, fries.stock_qty - Math.ceil(qty * 0.1)); changed = true; }
     }
 
-    // Kaas
     if (name.includes("cheese") || (item.itemNote && item.itemNote.toLowerCase().includes("kaas"))) {
       const cheese = inventory.find(i => i.item_name.includes("Kaas"));
       if (cheese && cheese.stock_qty >= qty) { cheese.stock_qty -= qty; changed = true; }
     }
 
-    // Speeltjes
     if (name.includes("happy meal")) {
       const toy = inventory.find(i => i.item_name.includes("Speeltjes"));
       if (toy && toy.stock_qty >= qty) { toy.stock_qty -= qty; changed = true; }
@@ -1231,7 +1237,7 @@ function addCustomBurgerToCart() {
   toast("🍔 Eigen Burger toegevoegd!");
 }
 
-// UNIVERSAL KIOSK MODAL
+// KIOSK KEUZESCHERM
 function openKioskModal(productId) {
   if (orderStopActive) return alert("⛔ Bestellingen zijn momenteel gepauzeerd!");
   if (!hasPerm("pos")) return toast("🔒 Geen kassarechten");
@@ -1241,7 +1247,19 @@ function openKioskModal(productId) {
   if (p.name.includes("Bouw je Eigen")) return openBurgerBuilderModal();
 
   currentKioskProduct = p;
-  kioskState = { menuSize: "single", side: "Franse Friet", drink: "Cola Zero", happyToy: "🧸 Speeltje", sauce: "Zoetzure Saus", ice: true, customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, customNote: "", qty: 1 };
+  kioskState = { 
+    menuSize: "single", 
+    side: "Franse Friet", 
+    sideExtra: 0, 
+    drink: "Cola Zero", 
+    drinkExtra: 0, 
+    happyToy: "🧸 Speeltje", 
+    sauce: "Zoetzure Saus", 
+    ice: true, 
+    customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, 
+    customNote: "", 
+    qty: 1 
+  };
 
   const activeBasePrice = getActivePrice(p);
   document.getElementById("kioskTitle").innerHTML = p.emoji + " " + p.name;
@@ -1274,23 +1292,19 @@ function setKioskMenuSize(size) {
   updateKioskPrice();
 }
 
-function setKioskSide(sideName) {
+function setKioskSide(sideName, extraCost, btnElement) {
   kioskState.side = sideName;
+  kioskState.sideExtra = extraCost || 0;
   document.querySelectorAll("#kioskSideSection .kiosk-card").forEach(c => c.classList.remove("selected"));
-  if (sideName.includes("Franse")) document.getElementById("side_fries").classList.add("selected");
-  if (sideName.includes("Twister")) document.getElementById("side_twister").classList.add("selected");
-  if (sideName.includes("Salad")) document.getElementById("side_salad").classList.add("selected");
+  if (btnElement) btnElement.classList.add("selected");
   updateKioskPrice();
 }
 
-function setKioskDrink(drinkName) {
+function setKioskDrink(drinkName, extraCost, btnElement) {
   kioskState.drink = drinkName;
+  kioskState.drinkExtra = extraCost || 0;
   document.querySelectorAll("#kioskDrinkSection .kiosk-card").forEach(c => c.classList.remove("selected"));
-  if (drinkName.includes("Cola Zero")) document.getElementById("dr_cola_zero").classList.add("selected");
-  else if (drinkName.includes("Coca-Cola")) document.getElementById("dr_cola").classList.add("selected");
-  else if (drinkName.includes("Fanta")) document.getElementById("dr_fanta").classList.add("selected");
-  else if (drinkName.includes("Sprite")) document.getElementById("dr_sprite").classList.add("selected");
-  else if (drinkName.includes("Shake")) document.getElementById("dr_shake").classList.add("selected");
+  if (btnElement) btnElement.classList.add("selected");
   updateKioskPrice();
 }
 
@@ -1337,8 +1351,8 @@ function calculateSingleKioskItemPrice() {
   if (kioskState.menuSize === "medium") p += 4.70;
   if (kioskState.menuSize === "large") p += 5.40;
   if (kioskState.menuSize !== "single") {
-    if (kioskState.side.includes("Twister")) p += 0.60;
-    if (kioskState.drink.includes("Shake")) p += 0.80;
+    p += (kioskState.sideExtra || 0);
+    p += (kioskState.drinkExtra || 0);
   }
   if (kioskState.customizations.onion === "extra") p += 0.30;
   if (kioskState.customizations.pickle === "extra") p += 0.30;
@@ -1616,7 +1630,6 @@ async function confirmPayment() {
   stats.sales++;
   stats.items += cart.reduce((a, x) => a + x.qty, 0);
 
-  // VOORRAAD DIRECT AUTOMATISCH AFTREKKEN
   deductInventoryForOrder(orderItems);
 
   save();
