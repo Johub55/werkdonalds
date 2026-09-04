@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Werkdonalds POS v20</title>
+<title>Werkdonalds POS v22</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
@@ -19,7 +19,7 @@ header{height:70px;background:#0066ff;color:#fff;display:flex;align-items:center
 .user-badge{background:rgba(255,255,255,0.2);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
 nav{height:52px;background:#fff;border-bottom:1px solid #e1e4e8;display:flex;gap:6px;padding:6px 16px;align-items:center;overflow-x:auto}
 nav button{border:0;background:#f0f2f5;color:#444;border-radius:8px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
-nav button.active{background:#ffbc0d;color:#111}
+nav button.active{background:#ffbc0d;color:#111;box-shadow:0 2px 6px rgba(255,188,13,0.3)}
 nav button.locked{opacity:0.35;cursor:not-allowed}
 .nav b{background:#0066ff;color:#fff;border-radius:99px;padding:1px 6px;font-size:11px}
 main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 122px)}
@@ -30,14 +30,14 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 
 .toolbar-actions{display:flex;gap:8px;align-items:center}
 .btn-blue{background:#0066ff;color:#fff;border:none;padding:9px 13px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
 .btn-yellow{background:#ffbc0d;color:#111;border:none;padding:9px 12px;border-radius:10px;font-weight:800;cursor:pointer}
-.search-bar{width:100%;max-width:260px;padding:9px 14px;border:1px solid #dce0e5;border-radius:10px;font-size:13px;outline:none}
+.search-bar{width:100%;max-width:240px;padding:9px 14px;border:1px solid #dce0e5;border-radius:10px;font-size:13px;outline:none}
 .busy-meter{background:#fff;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:800;border:1px solid #e2e8f0}
 .order-stop-banner{background:#0066ff;color:#fff;padding:14px;border-radius:12px;margin-bottom:14px;font-weight:800;text-align:center}
 .categories{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
 .categories button{border:1px solid #e1e4e8;padding:8px 14px;border-radius:10px;background:#fff;cursor:pointer;font-weight:700;font-size:12px;white-space:nowrap}
 .categories button.active{background:#ffbc0d;border-color:#d49b00;color:#111}
 .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.product{background:#fff;border-radius:14px;padding:12px;min-height:150px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.04);display:flex;flex-direction:column;justify-content:space-between;position:relative;border:2px solid transparent}
+.product{background:#fff;border-radius:14px;padding:12px;min-height:150px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.04);display:flex;flex-direction:column;justify-content:space-between;position:relative;border:2px solid transparent;transition:0.15s}
 .product:hover{border-color:#ffbc0d;transform:translateY(-2px)}
 .product.out-of-stock{opacity:0.4;filter:grayscale(1);pointer-events:none}
 .out-badge, .sale-badge{position:absolute;top:8px;color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px}
@@ -75,7 +75,7 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 
 .clear{width:100%;padding:8px;border:0;border-radius:8px;margin-top:6px;cursor:pointer;background:#f0f2f5;font-weight:600;color:#666;font-size:12px}
 .empty{text-align:center;color:#999;margin-top:40px}
 
-/* Kiosk Modals */
+/* Kiosk & Builder Modals */
 .kiosk-modal{background:#fff;border-radius:18px;width:92%;max-width:540px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 15px 40px rgba(0,0,0,0.3);overflow:hidden}
 .kiosk-header{background:#0066ff;color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
 .kiosk-header h2{margin:0;font-size:18px;font-weight:800}
@@ -84,8 +84,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 
 .kiosk-section{margin-bottom:16px}
 .kiosk-section-title{font-size:13px;font-weight:800;color:#2d3748;margin-bottom:8px}
 .kiosk-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
-.kiosk-card{background:#f8f9fa;border:2px solid #e2e8f0;border-radius:10px;padding:10px;cursor:pointer;text-align:center}
-.kiosk-card.selected{border-color:#ffbc0d;background:#fffdf0}
+.kiosk-card{background:#f8f9fa;border:2px solid #e2e8f0;border-radius:10px;padding:10px;cursor:pointer;text-align:center;transition:0.15s}
+.kiosk-card.selected{border-color:#ffbc0d;background:#fffdf0;box-shadow:0 2px 6px rgba(255,188,13,0.3)}
 .kiosk-card h4{margin:0 0 2px 0;font-size:13px;font-weight:700}
 .kiosk-card span{font-size:11px;font-weight:800;color:#0066ff}
 .kiosk-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
@@ -136,10 +136,10 @@ body.tv-pickup-active .pickup-num{font-size:52px!important;padding:20px 10px!imp
 .btn-exit-tv{display:none;position:fixed;bottom:15px;right:15px;background:rgba(0,0,0,0.6);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;z-index:999}
 body.tv-pickup-active .btn-exit-tv{display:block}
 
-/* Manager & Modals */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.stats div{background:#fff;padding:14px;border-radius:12px}
-.stats strong{display:block;font-size:22px;margin-top:4px;font-weight:900}
+/* Manager & Admin */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.stats div{background:#fff;padding:12px;border-radius:12px}
+.stats strong{display:block;font-size:20px;margin-top:4px;font-weight:900}
 .admin-card{background:#fff;border-radius:14px;padding:18px;margin-bottom:18px}
 .admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
 .admin-card input, .admin-card select{width:100%;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;margin-top:3px}
@@ -176,7 +176,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
       </svg>
     </div>
     <span>Werkdonalds</span>
-    <small>POS</small>
+    <small>POS v22</small>
   </div>
   <div class="header-right">
     <div class="connection" onclick="showConnectionDiagnostic()"><span id="dot"></span><span id="connection">Verbinden...</span></div>
@@ -201,7 +201,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   <div class="toolbar">
     <input type="text" id="searchBar" class="search-bar" placeholder="🔍 Zoek burger, snack of drankje..." oninput="filterProducts()">
     <div class="toolbar-actions">
-      <button class="btn-blue" onclick="openCustomItemModal()">➕ Handmatig Bedrag / Toeslag</button>
+      <button class="btn-blue" onclick="openCustomItemModal()">➕ Handmatig Bedrag</button>
       <div id="posBusyMeter" class="busy-meter">🟢 Rustig (~3 min)</div>
       <button class="btn-yellow" onclick="surpriseMe()">🎲 Verras Me!</button>
       <button class="btn-blue" onclick="toggleAppFullscreen()">📺 Fullscreen</button>
@@ -249,14 +249,20 @@ body.tv-pickup-active .btn-exit-tv{display:block}
 <!-- VOORRAAD & INKOOP -->
 <section id="inventory" class="screen">
   <div class="toolbar">
-    <h1>📦 Voorraad & Leveranciersbeheer</h1>
+    <h1>📦 Voorraad, Inkoop & Magazijnwaarde</h1>
     <button class="btn-blue" onclick="openAddInventoryModal()">➕ Nieuwe Grondstof Toevoegen</button>
   </div>
 
+  <div class="stats">
+    <div><span>Totale Inkoopkosten</span><strong id="invTotalCosts" style="color:#dc2626">€ 0,00</strong></div>
+    <div><span>Huidige Magazijnwaarde</span><strong id="invTotalValue" style="color:#0066ff">€ 0,00</strong></div>
+    <div><span>Geraamde Nettowinst</span><strong id="invEstimatedProfit" style="color:#15803d">€ 0,00</strong></div>
+  </div>
+
   <div class="admin-card">
-    <h3 style="margin:0 0 10px 0">Live Grondstoffen & Magazijn</h3>
+    <h3 style="margin:0 0 10px 0">Magazijn & Leveranciers (Inkoop kost budget)</h3>
     <table class="data-table">
-      <thead><tr><th>Grondstof / Item</th><th>Aantal op voorraad</th><th>Min. Voorraad</th><th>Leverancier</th><th>Status</th><th>Bijbestellen</th></tr></thead>
+      <thead><tr><th>Grondstof / Item</th><th>Voorraad</th><th>Min.</th><th>Inkoopprijs</th><th>Totale Waarde</th><th>Leverancier</th><th>Status</th><th>Bijbestellen</th></tr></thead>
       <tbody id="inventoryTableBody"></tbody>
     </table>
   </div>
@@ -274,13 +280,31 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   </div>
 
   <div class="stats">
-    <div><span>Totale Omzet (Bewaard)</span><strong id="revenue">€ 0,00</strong></div>
+    <div><span>Totale Omzet (Bewaard)</span><strong id="revenue" style="color:#15803d">€ 0,00</strong></div>
+    <div><span>Totale Inkoopkosten</span><strong id="mgrExpenses" style="color:#dc2626">€ 0,00</strong></div>
+    <div><span>Nettowinst</span><strong id="mgrNetProfit" style="color:#0066ff">€ 0,00</strong></div>
     <div><span>Totaal Bestellingen</span><strong id="sales">0</strong></div>
     <div><span>Verkochte Items</span><strong id="itemsSold">0</strong></div>
-    <div><span>Totale Kortingen</span><strong id="discountsGiven">€ 0,00</strong></div>
   </div>
 
-  <!-- WINKEL & BALIEBEDIENING -->
+  <!-- CADEAUBONNEN BEHEER -->
+  <div class="admin-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h3 style="margin:0">💳 Cadeaubonnen Beheren</h3>
+      <span style="font-size:12px;color:#666">Klanten kunnen hiermee betalen</span>
+    </div>
+    <table class="data-table" style="margin-top:10px;">
+      <thead><tr><th>Code</th><th>Huidig Saldo</th><th>Oorspronkelijk</th><th>Status</th><th>Actie</th></tr></thead>
+      <tbody id="giftCardTableBody"></tbody>
+    </table>
+    <h4 style="margin:14px 0 6px 0">+ Nieuwe Cadeaubon Aanmaken</h4>
+    <div class="admin-grid">
+      <div><input type="text" id="newGiftCardCode" placeholder="Code (bv. CADEAU25)"></div>
+      <div><input type="number" step="1" id="newGiftCardAmount" placeholder="Saldo (€, bv. 25)"></div>
+    </div>
+    <button class="admin-btn" onclick="createGiftCard()">+ Cadeaubon Aanmaken</button>
+  </div>
+
   <div class="admin-card">
     <h3>⚙️ Winkel- & Baliebeheer (Alleen Admin)</h3>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -295,23 +319,22 @@ body.tv-pickup-active .btn-exit-tv{display:block}
     </div>
   </div>
 
-  <!-- WACHTWOORD WIJZIGEN JOAS -->
   <div class="admin-card">
     <h3>🔑 Wachtwoord Wijzigen (Joas)</h3>
     <div class="admin-grid"><div><input type="password" id="adminDirectPass" placeholder="Nieuw wachtwoord"></div></div>
     <button class="admin-btn" onclick="saveAdminDirectPassword()">Wachtwoord Opslaan</button>
   </div>
 
-  <!-- NIEUW PRODUCT TOEVOEGEN -->
   <div class="admin-card">
     <h3>➕ Nieuw Gerecht of Snack Toevoegen (Cloud Sync)</h3>
     <div class="admin-grid">
-      <div><label>Productnaam:</label><input type="text" id="newProdName" placeholder="bv. WerkRib"></div>
-      <div><label>Reguliere Prijs (€):</label><input type="number" step="0.05" id="newProdPrice" placeholder="5.95"></div>
-      <div><label>Actieprijs (€, optioneel):</label><input type="number" step="0.05" id="newProdSalePrice" placeholder="3.50"></div>
+      <div><label>Naam:</label><input type="text" id="newProdName" placeholder="bv. WerkRib"></div>
+      <div><label>Regulier (€):</label><input type="number" step="0.05" id="newProdPrice" placeholder="5.95"></div>
+      <div><label>Actie (€):</label><input type="number" step="0.05" id="newProdSalePrice" placeholder="3.50"></div>
       <div><label>Categorie:</label>
         <select id="newProdCat">
           <option value="Burgers & Wraps">Burgers & Wraps</option>
+          <option value="Ontbijt & Bakery">Ontbijt & Bakery</option>
           <option value="Chicken & Snacks">Chicken & Snacks</option>
           <option value="Friet & Sides">Friet & Sides</option>
           <option value="Dranken & McCafé">Dranken & McCafé</option>
@@ -320,12 +343,11 @@ body.tv-pickup-active .btn-exit-tv{display:block}
           <option value="Sauzen & Dips">Sauzen & Dips</option>
         </select>
       </div>
-      <div><label>Emoji Icoon:</label><input type="text" id="newProdEmoji" placeholder="🍔" value="🍔"></div>
+      <div><label>Emoji:</label><input type="text" id="newProdEmoji" placeholder="🍔" value="🍔"></div>
     </div>
     <button class="admin-btn" onclick="addNewProduct()">+ Product Toevoegen & Syncen</button>
   </div>
 
-  <!-- PRODUCTEN OVERZICHT -->
   <div class="admin-card">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <h3 style="margin:0">🍔 Menulijst & Prijzen (50+ Items)</h3>
@@ -337,7 +359,6 @@ body.tv-pickup-active .btn-exit-tv{display:block}
     </table>
   </div>
 
-  <!-- WERKNEMERSBEHEER -->
   <div class="admin-card">
     <h3>👥 Werknemers & Rechten</h3>
     <table class="data-table">
@@ -365,27 +386,22 @@ body.tv-pickup-active .btn-exit-tv{display:block}
     <button class="admin-btn" onclick="createUser()">Werknemer Opslaan</button>
   </div>
 
-  <!-- SLIMME COUPONS -->
   <div class="admin-card">
-    <h3>🏷️ Slimme Kortingscoupons Beheren</h3>
+    <h3>🏷️ Kortingscoupons Beheren</h3>
     <table class="data-table">
-      <thead><tr><th>Code</th><th>Kortingstype</th><th>Waarde</th><th>Voorwaarde</th><th>Status</th><th>Actie</th></tr></thead>
+      <thead><tr><th>Code</th><th>Type</th><th>Waarde</th><th>Status</th><th>Actie</th></tr></thead>
       <tbody id="couponTableBody"></tbody>
     </table>
-    <h4 style="margin:14px 0 6px 0">+ Nieuwe Slimme Coupon</h4>
+    <h4 style="margin:14px 0 6px 0">+ Nieuwe Coupon</h4>
     <div class="admin-grid">
-      <div><label>Code:</label><input type="text" id="newCouponCode" placeholder="bv. WERKMAC50 of DEAL25"></div>
-      <div><label>Type:</label>
-        <select id="newCouponType" onchange="toggleCouponExtraFields()">
+      <div><input type="text" id="newCouponCode" placeholder="bv. WERKMAC50"></div>
+      <div>
+        <select id="newCouponType">
           <option value="percent">Percentage (%)</option>
           <option value="fixed">Vast Bedrag (€)</option>
-          <option value="product">Korting op Specifiek Product (€)</option>
-          <option value="threshold">Drempelkorting (X korting bij min. Y besteding)</option>
         </select>
       </div>
-      <div><label>Kortingswaarde:</label><input type="number" step="0.05" id="newCouponVal" placeholder="10 of 2.50"></div>
-      <div id="couponTargetProductGroup" style="display:none;"><label>Geldig voor product:</label><select id="newCouponTargetProduct"></select></div>
-      <div id="couponThresholdGroup" style="display:none;"><label>Minimale besteding (€):</label><input type="number" step="0.50" id="newCouponMinSubtotal" placeholder="25.00"></div>
+      <div><input type="number" step="0.05" id="newCouponVal" placeholder="10 of 2.50"></div>
     </div>
     <button class="admin-btn" onclick="createCoupon()">Slimme Coupon Opslaan</button>
   </div>
@@ -436,12 +452,13 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   <button onclick="closeCustomItemModal()" style="width:100%;margin-top:6px;padding:8px;border:none;background:#eee;border-radius:8px;cursor:pointer;">Annuleren</button>
 </div></div>
 
-<!-- POPUP: VOORRAAD ITEM TOEVOEGEN -->
+<!-- POPUP: VOORRAAD ITEM TOEVOEGEN MET INKOOPPRIJS -->
 <div id="addInventoryModalBackdrop"><div class="modal">
   <h2>➕ Nieuwe Grondstof Toevoegen</h2>
   <div><label>Itemnaam:</label><input type="text" id="newInvName" placeholder="bv. WerkMac Saus Jerrycan"></div>
   <div><label>Aantal op voorraad:</label><input type="number" id="newInvQty" value="100"></div>
   <div><label>Minimale voorraadgrens:</label><input type="number" id="newInvMin" value="20"></div>
+  <div><label>Inkoopprijs per eenheid (€):</label><input type="number" step="0.01" id="newInvCost" value="0.50"></div>
   <div><label>Eenheid:</label><select id="newInvUnit"><option value="stuks">Stuks</option><option value="dozen">Dozen</option><option value="liters">Liters</option><option value="kg">Kg</option></select></div>
   <div><label>Leverancier:</label><input type="text" id="newInvSupplier" placeholder="bv. HAVI Logistics"></div>
   <button class="admin-btn" style="width:100%" onclick="saveNewInventoryItem()">Opslaan in Voorraad</button>
@@ -460,7 +477,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   </div>
 </div>
 
-<!-- MODAL: ADMIN COUPON KIEZEN -->
+<!-- MODALS VOOR KIOSK, EDIT, AUTH -->
 <div id="adminCouponModalBackdrop"><div class="modal">
   <h2>⚡ Snel Korting Kiezen (Admin)</h2>
   <div id="activeCouponsList"></div>
@@ -474,7 +491,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   <button onclick="closeAdminCouponModal()" style="width:100%;margin-top:6px;padding:8px;border:none;background:#eee;border-radius:8px;cursor:pointer;">Sluiten</button>
 </div></div>
 
-<!-- KIOSK KEUZESCHERM -->
+<!-- KIOSK KEUZESCHERM (MET TYPBAAR AANTAL) -->
 <div id="kioskModalBackdrop"><div class="kiosk-modal">
   <div class="kiosk-header">
     <h2 id="kioskTitle">🍔 Product</h2>
@@ -557,7 +574,11 @@ body.tv-pickup-active .btn-exit-tv{display:block}
     </div>
   </div>
   <div class="kiosk-footer">
-    <div class="kiosk-stepper"><button onclick="changeKioskQty(-1)">−</button><b id="kioskQty">1</b><button onclick="changeKioskQty(1)">+</button></div>
+    <div class="kiosk-stepper">
+      <button onclick="changeKioskQty(-1)">−</button>
+      <input type="number" id="kioskQtyInput" min="1" max="999" value="1" oninput="setKioskQty(this.value)" style="width:45px;text-align:center;border:none;background:transparent;font-size:16px;font-weight:bold;outline:none;">
+      <button onclick="changeKioskQty(1)">+</button>
+    </div>
     <button class="kiosk-add-btn" onclick="addKioskProductToCart()"><span>Toevoegen</span><span id="kioskTotalPrice">€ 0,00</span></button>
   </div>
 </div></div>
@@ -643,6 +664,7 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   <div>
     <select id="editProdCat">
       <option value="Burgers & Wraps">Burgers & Wraps</option>
+      <option value="Ontbijt & Bakery">Ontbijt & Bakery</option>
       <option value="Chicken & Snacks">Chicken & Snacks</option>
       <option value="Friet & Sides">Friet & Sides</option>
       <option value="Dranken & McCafé">Dranken & McCafé</option>
@@ -656,21 +678,34 @@ body.tv-pickup-active .btn-exit-tv{display:block}
   <button onclick="closeEditProductModal()" style="width:100%;margin-top:6px;padding:8px;border:none;background:#eee;border-radius:8px;cursor:pointer;">Annuleren</button>
 </div></div>
 
-<!-- BETAAL MODAL -->
+<!-- BETAAL MODAL MET UITGEBREIDE CADEAUBON AFREKENING -->
 <div id="paymentModalBackdrop"><div class="modal">
   <h2>💳 Betalen</h2>
   <div style="font-size:24px;font-weight:900;text-align:center;color:#0066ff;margin-bottom:12px;" id="modalPayTotal">€ 0,00</div>
   <label>Betaalmethode:</label>
-  <select id="paymentMethod" onchange="toggleCashInput()">
+  <select id="paymentMethod" onchange="togglePaymentInputs()">
     <option value="pin">💳 PIN / Betaalpas</option>
     <option value="cash">💵 Contant</option>
     <option value="giftcard">📱 Cadeaubon</option>
   </select>
+
+  <!-- Contant Calculator -->
   <div id="cashCalcArea" style="display:none;margin-top:10px;">
     <label>Ontvangen bedrag (€):</label>
     <input type="number" step="0.05" id="cashReceived" placeholder="0.00" oninput="calcChange()">
     <div style="font-weight:bold;margin-top:4px;" id="changeAmount">Wisselgeld: € 0,00</div>
   </div>
+
+  <!-- Cadeaubon Inwisselen & Saldo Checker -->
+  <div id="giftCardPayArea" style="display:none;margin-top:10px;background:#f8f9fa;padding:12px;border-radius:10px;border:1px solid #cbd5e1;">
+    <label>Cadeaubon Code:</label>
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <input type="text" id="payGiftCardCode" placeholder="bv. WERK25" style="margin-bottom:0">
+      <button type="button" class="btn-blue" onclick="checkGiftCardForPayment()">Check Saldo</button>
+    </div>
+    <div id="giftCardStatusMessage" style="font-size:12px;font-weight:bold;margin-top:6px;color:#0066ff"></div>
+  </div>
+
   <button class="admin-btn" style="width:100%;padding:12px;font-size:15px;" onclick="confirmPayment()">✓ Betaling Bevestigen</button>
   <button onclick="closePaymentModal()" style="width:100%;margin-top:6px;padding:8px;border:none;background:#eee;border-radius:8px;cursor:pointer;">Annuleren</button>
 </div></div>
@@ -739,11 +774,9 @@ const AudioFX = {
       this.bell();
       setTimeout(() => {
         if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance("Attentie: bestelling " + orderNo + " is gereed om af te halen!");
           utter.lang = "nl-NL";
           utter.rate = 0.95;
-          utter.pitch = 1.05;
           window.speechSynthesis.speak(utter);
         }
       }, 500);
@@ -776,7 +809,7 @@ function toggleAppFullscreen() {
   } catch(e){}
 }
 
-// IN-APP CONFIRM DIALOG
+// In-App Confirm Dialog
 let confirmCallback = null;
 function showConfirmDialog(title, message, onYes) {
   document.getElementById("customConfirmTitle").textContent = title;
@@ -798,16 +831,26 @@ document.getElementById("customConfirmBtnYes").onclick = () => {
 let users = [];
 let currentUser = JSON.parse(sessionStorage.getItem("wd_session_user") || "null");
 let coupons = JSON.parse(localStorage.getItem("wd_coupons") || "[]");
-let inventory = JSON.parse(localStorage.getItem("wd_inventory") || "null") || [
-  { id: 1, item_name: "🍔 Burger Broodjes (Sesam)", stock_qty: 120, min_qty: 30, unit: "stuks", supplier_name: "Bakkerij Bakkersland" },
-  { id: 2, item_name: "🥩 100% Rundvlees Patties", stock_qty: 95, min_qty: 25, unit: "stuks", supplier_name: "Vleesbedrijf Van Loon" },
-  { id: 3, item_name: "🍗 Krokante Kip Patties", stock_qty: 60, min_qty: 20, unit: "stuks", supplier_name: "Pluimvee Verbeek" },
-  { id: 4, item_name: "🍟 Franse Friet (Dozen 10kg)", stock_qty: 18, min_qty: 5, unit: "dozen", supplier_name: "Aviko Potato" },
-  { id: 5, item_name: "🧀 Cheddar Kaas Plakjes", stock_qty: 150, min_qty: 40, unit: "stuks", supplier_name: "FrieslandCampina" },
-  { id: 6, item_name: "🥤 Coca-Cola Siroop (Tanks)", stock_qty: 6, min_qty: 2, unit: "stuks", supplier_name: "Coca-Cola Europacific" },
-  { id: 7, item_name: "🎁 Happy Meal Speeltjes", stock_qty: 80, min_qty: 20, unit: "stuks", supplier_name: "Toy Logistics Europe" }
+
+// Cadeaubonnen Saldo Systeem
+let giftCards = JSON.parse(localStorage.getItem("wd_gift_cards") || "null") || [
+  { id: 1, code: "WERK10", initial_balance: 10.00, current_balance: 10.00, is_active: true },
+  { id: 2, code: "WERK25", initial_balance: 25.00, current_balance: 25.00, is_active: true },
+  { id: 3, code: "WERK50", initial_balance: 50.00, current_balance: 50.00, is_active: true }
 ];
 
+// Magazijn met inkoopprijzen
+let inventory = JSON.parse(localStorage.getItem("wd_inventory") || "null") || [
+  { id: 1, item_name: "🍔 Burger Broodjes (Sesam)", stock_qty: 120, min_qty: 30, unit: "stuks", cost_price: 0.35, supplier_name: "Bakkerij Bakkersland" },
+  { id: 2, item_name: "🥩 100% Rundvlees Patties", stock_qty: 95, min_qty: 25, unit: "stuks", cost_price: 0.65, supplier_name: "Vleesbedrijf Van Loon" },
+  { id: 3, item_name: "🍗 Krokante Kip Patties", stock_qty: 60, min_qty: 20, unit: "stuks", cost_price: 0.55, supplier_name: "Pluimvee Verbeek" },
+  { id: 4, item_name: "🍟 Franse Friet (Dozen 10kg)", stock_qty: 18, min_qty: 5, unit: "dozen", cost_price: 4.50, supplier_name: "Aviko Potato" },
+  { id: 5, item_name: "🧀 Cheddar Kaas Plakjes", stock_qty: 150, min_qty: 40, unit: "stuks", cost_price: 0.15, supplier_name: "FrieslandCampina" },
+  { id: 6, item_name: "🥤 Coca-Cola Siroop (Tanks)", stock_qty: 6, min_qty: 2, unit: "stuks", cost_price: 18.50, supplier_name: "Coca-Cola Europacific" },
+  { id: 7, item_name: "🎁 Happy Meal Speeltjes", stock_qty: 80, min_qty: 20, unit: "stuks", cost_price: 0.85, supplier_name: "Toy Logistics Europe" }
+];
+
+let totalExpenses = JSON.parse(localStorage.getItem("wd_expenses") || "0");
 let orderStopActive = JSON.parse(localStorage.getItem("wd_order_stop") || "false");
 let pickupClosed = JSON.parse(localStorage.getItem("wd_pickup_closed") || "false");
 
@@ -819,6 +862,7 @@ function hasPerm(p) {
 
 function saveCouponsLocally() { localStorage.setItem("wd_coupons", JSON.stringify(coupons)); }
 function saveInventoryLocally() { localStorage.setItem("wd_inventory", JSON.stringify(inventory)); }
+function saveGiftCardsLocally() { localStorage.setItem("wd_gift_cards", JSON.stringify(giftCards)); }
 
 // Menulijst met 50+ Werkdonalds Items
 const defaultProducts = [
@@ -901,25 +945,14 @@ let category = "Alles";
 let orderNo = 1001;
 let orderType = "dine_in";
 let appliedDiscount = { type: "none", val: 0, label: "Geen" };
+let activeGiftCard = null; // Gekoppelde cadeaubon voor betaling
 let orders = JSON.parse(localStorage.getItem("wd_orders") || "[]");
 let online = false, supabaseClient = null;
 let stats = JSON.parse(localStorage.getItem("wd_stats") || '{"revenue":0,"sales":0,"items":0,"discounts":0}');
 
 // Kiosk State
 let currentKioskProduct = null;
-let kioskState = { 
-  menuSize: "single", 
-  side: "Franse Friet", 
-  sideExtra: 0, 
-  drink: "Cola Zero", 
-  drinkExtra: 0, 
-  happyToy: "🧸 Speeltje", 
-  sauce: "Zoetzure Saus", 
-  ice: true, 
-  customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, 
-  customNote: "", 
-  qty: 1 
-};
+let kioskState = { menuSize: "single", side: "Franse Friet", sideExtra: 0, drink: "Cola Zero", drinkExtra: 0, happyToy: "🧸 Speeltje", sauce: "Zoetzure Saus", ice: true, customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, customNote: "", qty: 1 };
 let builderState = { bun: { name: "Sesambroodje", extra: 0 }, patty: { name: "100% Rundvlees", extra: 0 }, sauce: { name: "Special Saus", extra: 0 } };
 
 function getActivePrice(p) { return (p.onSale && p.salePrice > 0) ? p.salePrice : p.price; }
@@ -941,6 +974,7 @@ function updateBusyMeters() {
   });
 }
 
+// AUTOMATISCHE VOORRAADAFTREK
 function deductInventoryForOrder(orderItems) {
   let changed = false;
   orderItems.forEach(item => {
@@ -953,22 +987,18 @@ function deductInventoryForOrder(orderItems) {
       const beef = inventory.find(i => i.item_name.includes("Rundvlees"));
       if (beef && beef.stock_qty >= qty) { beef.stock_qty -= (name.includes("double") ? qty * 2 : qty); changed = true; }
     }
-
     if (name.includes("chicken") || name.includes("werkchicken")) {
       const chicken = inventory.find(i => i.item_name.includes("Kip"));
       if (chicken && chicken.stock_qty >= qty) { chicken.stock_qty -= qty; changed = true; }
     }
-
     if (name.includes("friet") || name.includes("menu")) {
       const fries = inventory.find(i => i.item_name.includes("Friet"));
       if (fries && fries.stock_qty > 0) { fries.stock_qty = Math.max(0, fries.stock_qty - Math.ceil(qty * 0.1)); changed = true; }
     }
-
     if (name.includes("cheese") || (item.itemNote && item.itemNote.toLowerCase().includes("kaas"))) {
       const cheese = inventory.find(i => i.item_name.includes("Kaas"));
       if (cheese && cheese.stock_qty >= qty) { cheese.stock_qty -= qty; changed = true; }
     }
-
     if (name.includes("happy meal")) {
       const toy = inventory.find(i => i.item_name.includes("Speeltjes"));
       if (toy && toy.stock_qty >= qty) { toy.stock_qty -= qty; changed = true; }
@@ -981,6 +1011,7 @@ function deductInventoryForOrder(orderItems) {
   }
 }
 
+// BEREKEN STATISTIEKEN INCLUSIEF INKOOPWAARDE & WINST
 function recalcStats() {
   const validOrders = orders.filter(o => o.status !== "cancelled");
   stats.sales = validOrders.length;
@@ -1003,7 +1034,9 @@ function save() {
   localStorage.setItem("wd_custom_products", JSON.stringify(products));
   localStorage.setItem("wd_order_stop", JSON.stringify(orderStopActive));
   localStorage.setItem("wd_pickup_closed", JSON.stringify(pickupClosed));
+  localStorage.setItem("wd_expenses", JSON.stringify(totalExpenses));
   saveInventoryLocally();
+  saveGiftCardsLocally();
 }
 
 function setConnection(ok, text, errorMsg = null) {
@@ -1098,6 +1131,7 @@ function updateAuthUI() {
   renderCouponTable();
   renderProductTable();
   renderInventoryTable();
+  renderGiftCardTable();
   updateStoreStatusUI();
 }
 
@@ -1174,15 +1208,7 @@ function addCustomItemToCart() {
   const amount = parseFloat(document.getElementById("customItemAmount").value);
   if (isNaN(amount) || amount <= 0) return alert("Voer een geldig bedrag in!");
 
-  cart.push({
-    id: Date.now(),
-    productId: 99999,
-    name: desc,
-    price: amount,
-    qty: 1,
-    itemNote: "Handmatig bedrag"
-  });
-
+  cart.push({ id: Date.now(), productId: 99999, name: desc, price: amount, qty: 1, itemNote: "Handmatig bedrag" });
   AudioFX.beep();
   closeCustomItemModal();
   renderCart();
@@ -1237,7 +1263,7 @@ function addCustomBurgerToCart() {
   toast("🍔 Eigen Burger toegevoegd!");
 }
 
-// KIOSK KEUZESCHERM
+// UNIVERSAL KIOSK MODAL
 function openKioskModal(productId) {
   if (orderStopActive) return alert("⛔ Bestellingen zijn momenteel gepauzeerd!");
   if (!hasPerm("pos")) return toast("🔒 Geen kassarechten");
@@ -1247,25 +1273,13 @@ function openKioskModal(productId) {
   if (p.name.includes("Bouw je Eigen")) return openBurgerBuilderModal();
 
   currentKioskProduct = p;
-  kioskState = { 
-    menuSize: "single", 
-    side: "Franse Friet", 
-    sideExtra: 0, 
-    drink: "Cola Zero", 
-    drinkExtra: 0, 
-    happyToy: "🧸 Speeltje", 
-    sauce: "Zoetzure Saus", 
-    ice: true, 
-    customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, 
-    customNote: "", 
-    qty: 1 
-  };
+  kioskState = { menuSize: "single", side: "Franse Friet", sideExtra: 0, drink: "Cola Zero", drinkExtra: 0, happyToy: "🧸 Speeltje", sauce: "Zoetzure Saus", ice: true, customizations: { onion: "normaal", pickle: "normaal", cheese: "normaal" }, customNote: "", qty: 1 };
 
   const activeBasePrice = getActivePrice(p);
   document.getElementById("kioskTitle").innerHTML = p.emoji + " " + p.name;
   document.getElementById("kioskSinglePrice").textContent = money(activeBasePrice);
   document.getElementById("kioskCustomNote").value = "";
-  document.getElementById("kioskQty").textContent = "1";
+  setKioskQty(1);
 
   const canBeMenu = (p.cat === "Burgers & Wraps" || p.name.includes("Nuggets") || p.name.includes("Tenders") || p.cat === "Chicken & Snacks");
   document.getElementById("kioskMenuTypeSection").style.display = canBeMenu ? "block" : "none";
@@ -1339,9 +1353,17 @@ function setKioskCust(item, val) {
   updateKioskPrice();
 }
 
+// Typbaar aantal Kiosk
 function changeKioskQty(delta) {
-  kioskState.qty = Math.max(1, kioskState.qty + delta);
-  document.getElementById("kioskQty").textContent = kioskState.qty;
+  setKioskQty(kioskState.qty + delta);
+}
+
+function setKioskQty(val) {
+  let q = parseInt(val);
+  if (isNaN(q) || q < 1) q = 1;
+  kioskState.qty = q;
+  const input = document.getElementById("kioskQtyInput");
+  if (input) input.value = q;
   updateKioskPrice();
 }
 
@@ -1518,6 +1540,12 @@ function renderProducts(filter = "") {
 }
 
 function qty(i, n) { cart[i].qty += n; if (cart[i].qty <= 0) cart.splice(i, 1); renderCart(); }
+function setCartQty(i, val) {
+  let q = parseInt(val);
+  if (isNaN(q) || q <= 0) cart.splice(i, 1);
+  else cart[i].qty = q;
+  renderCart();
+}
 function removeItem(i) { cart.splice(i, 1); renderCart(); }
 
 function renderCart() {
@@ -1531,7 +1559,7 @@ function renderCart() {
         ${x.itemNote ? `<div class="cartItemDetails">📝 ${x.itemNote}</div>` : ''}
         <div class="controls">
           <button onclick="qty(${i},-1)">−</button>
-          <b>${x.qty}</b>
+          <input type="number" min="1" max="999" value="${x.qty}" onchange="setCartQty(${i}, this.value)" style="width:45px;text-align:center;padding:3px;border:1px solid #cbd5e1;border-radius:6px;font-weight:bold;font-size:12px;">
           <button onclick="qty(${i},1)">+</button>
           <button class="remove" onclick="removeItem(${i})">✕</button>
         </div>
@@ -1574,22 +1602,28 @@ function emptyCart() {
   renderCart();
 }
 
-// BETALEN & INSTANT BROADCAST
+// BETALEN MET CADEAUBONNEN & SALDO
 function openPaymentModal() {
   if (orderStopActive) return alert("⛔ Bestellingen zijn momenteel gepauzeerd!");
   if (!cart.length) return alert("De bestelling is leeg.");
-  let rawTotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
-  let discountAmount = 0;
-  if (appliedDiscount.type === "percent") discountAmount = rawTotal * (appliedDiscount.val / 100);
-  else if (appliedDiscount.type === "fixed" || appliedDiscount.type === "threshold") discountAmount = Math.min(rawTotal, appliedDiscount.val);
+  activeGiftCard = null;
+  document.getElementById("giftCardStatusMessage").textContent = "";
+  document.getElementById("payGiftCardCode").value = "";
 
+  let rawTotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  let discountAmount = (appliedDiscount.type === "percent") ? rawTotal * (appliedDiscount.val / 100) : (appliedDiscount.type === "fixed" ? Math.min(rawTotal, appliedDiscount.val) : 0);
   document.getElementById("modalPayTotal").textContent = money(Math.max(0, rawTotal - discountAmount));
   document.getElementById("paymentModalBackdrop").classList.add("show");
-  toggleCashInput();
+  togglePaymentInputs();
 }
 
 function closePaymentModal() { document.getElementById("paymentModalBackdrop").classList.remove("show"); }
-function toggleCashInput() { document.getElementById("cashCalcArea").style.display = (document.getElementById("paymentMethod").value === "cash") ? "block" : "none"; }
+
+function togglePaymentInputs() {
+  const method = document.getElementById("paymentMethod").value;
+  document.getElementById("cashCalcArea").style.display = (method === "cash") ? "block" : "none";
+  document.getElementById("giftCardPayArea").style.display = (method === "giftcard") ? "block" : "none";
+}
 
 function calcChange() {
   let rawTotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
@@ -1600,14 +1634,51 @@ function calcChange() {
   document.getElementById("changeAmount").textContent = "Wisselgeld: " + (change >= 0 ? money(change) : "Nog te weinig");
 }
 
+function checkGiftCardForPayment() {
+  const code = document.getElementById("payGiftCardCode").value.trim().toUpperCase();
+  const card = giftCards.find(g => g.code === code && g.is_active !== false);
+
+  if (!card) {
+    activeGiftCard = null;
+    document.getElementById("giftCardStatusMessage").innerHTML = "<span style='color:#dc2626'>❌ Ongeldige of geblokkeerde cadeaubon.</span>";
+    return;
+  }
+
+  activeGiftCard = card;
+  let rawTotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
+  let discountAmount = (appliedDiscount.type === "percent") ? rawTotal * (appliedDiscount.val / 100) : (appliedDiscount.type === "fixed" ? Math.min(rawTotal, appliedDiscount.val) : 0);
+  let finalTotal = Math.max(0, rawTotal - discountAmount);
+
+  if (card.current_balance >= finalTotal) {
+    document.getElementById("giftCardStatusMessage").innerHTML = "🟢 Saldo: " + money(card.current_balance) + " (Voldoende! Resterend saldo na aankoop: " + money(card.current_balance - finalTotal) + ")";
+  } else {
+    document.getElementById("giftCardStatusMessage").innerHTML = "🟡 Saldo: " + money(card.current_balance) + " (Onvoldoende: verbruikt heel het saldo, restbedrag " + money(finalTotal - card.current_balance) + " via PIN/Contant).";
+  }
+}
+
 async function confirmPayment() {
   if (orderStopActive) return alert("⛔ Bestelstop actief!");
   let rawTotal = cart.reduce((a, x) => a + x.price * x.qty, 0);
-  let discountAmount = 0;
-  if (appliedDiscount.type === "percent") discountAmount = rawTotal * (appliedDiscount.val / 100);
-  else if (appliedDiscount.type === "fixed" || appliedDiscount.type === "threshold") discountAmount = Math.min(rawTotal, appliedDiscount.val);
-
+  let discountAmount = (appliedDiscount.type === "percent") ? rawTotal * (appliedDiscount.val / 100) : (appliedDiscount.type === "fixed" ? Math.min(rawTotal, appliedDiscount.val) : 0);
   let finalTotal = Math.max(0, rawTotal - discountAmount);
+
+  const paymentMethod = document.getElementById("paymentMethod").value;
+
+  // Cadeaubon Saldo Aftrek
+  if (paymentMethod === "giftcard") {
+    if (!activeGiftCard) return alert("Controleer eerst een geldige cadeaubon!");
+    if (activeGiftCard.current_balance >= finalTotal) {
+      activeGiftCard.current_balance -= finalTotal;
+    } else {
+      activeGiftCard.current_balance = 0;
+    }
+    saveGiftCardsLocally();
+    renderGiftCardTable();
+    if (online && supabaseClient) {
+      await supabaseClient.from("gift_cards").update({ current_balance: activeGiftCard.current_balance }).eq("code", activeGiftCard.code);
+    }
+  }
+
   const orderItems = cart.map(x => ({ name: x.name, qty: x.qty, price: x.price, itemNote: x.itemNote || "" }));
 
   const newOrder = {
@@ -1617,7 +1688,7 @@ async function confirmPayment() {
     discount: discountAmount,
     orderType,
     identifier: document.getElementById("orderIdentifierInput").value.trim(),
-    paymentMethod: document.getElementById("paymentMethod").value,
+    paymentMethod: paymentMethod,
     cashier: currentUser ? currentUser.name : "Kassa",
     status: "new",
     time: new Date().toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" }),
@@ -1671,11 +1742,7 @@ function closeReceiptModal() { document.getElementById("receiptModalBackdrop").c
 async function broadcastEvent(event, data) {
   if (realtimeChannel) {
     try {
-      await realtimeChannel.send({
-        type: "broadcast",
-        event: "pos_event",
-        payload: { event, data }
-      });
+      await realtimeChannel.send({ type: "broadcast", event: "pos_event", payload: { event, data } });
     } catch(e){}
   }
 }
@@ -1730,13 +1797,26 @@ async function fetchProductsFromDB() {
   } catch(e){}
 }
 
+async function fetchGiftCardsFromDB() {
+  if (!supabaseClient) return;
+  try {
+    const { data } = await supabaseClient.from("gift_cards").select("*");
+    if (data && data.length > 0) {
+      giftCards = data;
+      saveGiftCardsLocally();
+      renderGiftCardTable();
+    }
+  } catch(e){}
+}
+
 async function initOnline() {
   try {
-    if (!window.supabase) throw new Error("Supabase JS kon niet geladen worden.");
+    if (!window.supabase) throw new Error("Supabase JS niet geladen.");
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     await fetchOrdersFromDB();
     await fetchProductsFromDB();
+    await fetchGiftCardsFromDB();
 
     try {
       const { data: userData } = await supabaseClient.rpc("get_pos_users");
@@ -1748,9 +1828,7 @@ async function initOnline() {
       if (couponData) { coupons = couponData; saveCouponsLocally(); renderCouponTable(); }
     } catch(e){}
 
-    realtimeChannel = supabaseClient.channel("werkdonalds_live_room", {
-      config: { broadcast: { self: false } }
-    });
+    realtimeChannel = supabaseClient.channel("werkdonalds_live_room", { config: { broadcast: { self: false } } });
 
     realtimeChannel
       .on("broadcast", { event: "pos_event" }, ({ payload }) => {
@@ -1772,9 +1850,7 @@ async function initOnline() {
           const o = orders.find(x => x.no === data.orderNo);
           if (o) {
             o.status = data.status;
-            if (data.status === "done") {
-              AudioFX.speakOrder(data.orderNo);
-            }
+            if (data.status === "done") AudioFX.speakOrder(data.orderNo);
             recalcStats();
             save();
             updateAll();
@@ -1784,31 +1860,20 @@ async function initOnline() {
           pickupClosed = data.pickupClosed;
           save();
           updateStoreStatusUI();
-        } else if (event === "DELETE_ORDER") {
-          const o = orders.find(x => x.no === data.orderNo);
-          if (o) o.status = "cancelled";
-          recalcStats();
-          save();
-          updateAll();
         }
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, async () => {
-        await fetchOrdersFromDB();
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, async () => {
-        await fetchProductsFromDB();
-      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, async () => { await fetchOrdersFromDB(); })
+      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, async () => { await fetchProductsFromDB(); })
+      .on("postgres_changes", { event: "*", schema: "public", table: "gift_cards" }, async () => { await fetchGiftCardsFromDB(); })
       .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          setConnection(true, "Online (Instant Broadcast)");
-        }
+        if (status === "SUBSCRIBED") setConnection(true, "Online (Instant Broadcast)");
       });
 
     setConnection(true, "Online (Live Sync)");
     setInterval(async () => { if (online && supabaseClient) await fetchOrdersFromDB(); }, 2500);
 
   } catch(e) {
-    console.error("Supabase verbindingsfout:", e);
+    console.error("Supabase error:", e);
     setConnection(false, "Demo-modus", e.message);
   }
 }
@@ -1872,10 +1937,7 @@ function setOrderStatus(orderNumber, newStatus) {
   save();
   onlineStatus(orderNumber, newStatus);
   broadcastEvent("STATUS_CHANGE", { orderNo: orderNumber, status: newStatus });
-  
-  if (newStatus === "done") {
-    AudioFX.speakOrder(orderNumber);
-  }
+  if (newStatus === "done") AudioFX.speakOrder(orderNumber);
   updateAll();
   toast(newStatus === "done" ? ("🍔 Bestelling #" + orderNumber + " is klaar!") : ("↩️ Bestelling #" + orderNumber + " bijgewerkt"));
 }
@@ -1893,7 +1955,7 @@ function archiveOrder(orderNumber) {
 
 function deleteSingleOrder(orderNumber) {
   if (!hasPerm("orders_manage")) return toast("🔒 Geen rechten!");
-  showConfirmDialog("Bestelling Annuleren", "Weet je zeker dat je bestelling #" + orderNumber + " wilt annuleren en terugbetalen?", async () => {
+  showConfirmDialog("Bestelling Annuleren", "Weet je zeker dat je bestelling #" + orderNumber + " wilt annuleren?", async () => {
     const o = orders.find(x => x.no === orderNumber);
     if (o) o.status = "cancelled";
     recalcStats();
@@ -1930,41 +1992,59 @@ function renderHistory() {
 
 function renderManager() {
   revenue.textContent = money(stats.revenue);
+  mgrExpenses.textContent = money(totalExpenses);
+  mgrNetProfit.textContent = money(Math.max(0, stats.revenue - totalExpenses));
   sales.textContent = stats.sales;
   itemsSold.textContent = stats.items;
   discountsGiven.textContent = money(stats.discounts);
   renderHistory();
 }
 
-// VOORRAAD & INKOOP
+// VOORRAAD & INKOOP (MET GELD EN WINSTBEREKENING)
 function renderInventoryTable() {
   const tbody = document.getElementById("inventoryTableBody");
   if (!tbody) return;
+
+  let totalValue = 0;
   tbody.innerHTML = inventory.map(it => {
     const isLow = it.stock_qty <= it.min_qty;
+    const itemTotalVal = (it.stock_qty * (it.cost_price || 0.50));
+    totalValue += itemTotalVal;
+
     return `
       <tr>
         <td><b>${it.item_name}</b></td>
         <td><span style="font-size:15px;font-weight:bold;color:${isLow ? '#dc2626' : '#15803d'}">${it.stock_qty} ${it.unit}</span></td>
         <td>${it.min_qty} ${it.unit}</td>
+        <td>${money(it.cost_price || 0.50)}</td>
+        <td><b>${money(itemTotalVal)}</b></td>
         <td>${it.supplier_name || '-'}</td>
         <td><span style="font-weight:bold;color:${isLow ? '#dc2626' : '#15803d'}">${isLow ? '⚠️ Bijna Op' : '🟢 Voldoende'}</span></td>
         <td>
-          <button onclick="adjustInventoryQty(${it.id}, 10)" style="padding:4px 8px;border:1px solid #ccc;background:#f8f9fa;border-radius:6px;cursor:pointer;font-weight:bold;">+10</button>
-          <button onclick="adjustInventoryQty(${it.id}, 50)" style="padding:4px 8px;border:1px solid #0066ff;background:#0066ff;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;">+50</button>
+          <button onclick="buyInventoryItem(${it.id}, 10)" style="padding:4px 8px;border:1px solid #ccc;background:#f8f9fa;border-radius:6px;cursor:pointer;font-weight:bold;">+10 (${money((it.cost_price || 0.5) * 10)})</button>
+          <button onclick="buyInventoryItem(${it.id}, 50)" style="padding:4px 8px;border:1px solid #0066ff;background:#0066ff;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;">+50 (${money((it.cost_price || 0.5) * 50)})</button>
         </td>
       </tr>
     `;
   }).join("");
+
+  document.getElementById("invTotalCosts").textContent = money(totalExpenses);
+  document.getElementById("invTotalValue").textContent = money(totalValue);
+  document.getElementById("invEstimatedProfit").textContent = money(Math.max(0, stats.revenue - totalExpenses));
 }
 
-function adjustInventoryQty(id, amount) {
+function buyInventoryItem(id, amount) {
   const item = inventory.find(x => x.id === id);
   if (item) {
-    item.stock_qty += amount;
-    saveInventoryLocally();
-    renderInventoryTable();
-    toast("📦 " + amount + " " + item.unit + " toegevoegd aan voorraad!");
+    const cost = amount * (item.cost_price || 0.50);
+    showConfirmDialog("Inkoop Bevestigen", `Wil je ${amount} ${item.unit} ${item.item_name} inkopen voor ${money(cost)}?`, () => {
+      item.stock_qty += amount;
+      totalExpenses += cost;
+      save();
+      renderInventoryTable();
+      renderManager();
+      toast(`📦 ${amount} ${item.unit} ingekocht! Inkoopkosten: ${money(cost)}`);
+    });
   }
 }
 
@@ -1975,16 +2055,72 @@ function saveNewInventoryItem() {
   const name = document.getElementById("newInvName").value.trim();
   const qty = parseInt(document.getElementById("newInvQty").value) || 100;
   const min = parseInt(document.getElementById("newInvMin").value) || 20;
+  const cost = parseFloat(document.getElementById("newInvCost").value) || 0.50;
   const unit = document.getElementById("newInvUnit").value;
   const supplier = document.getElementById("newInvSupplier").value.trim();
 
   if (!name) return alert("Voer een naam in!");
 
-  inventory.push({ id: Date.now(), item_name: name, stock_qty: qty, min_qty: min, unit, supplier_name: supplier });
+  inventory.push({ id: Date.now(), item_name: name, stock_qty: qty, min_qty: min, unit, cost_price: cost, supplier_name: supplier });
   saveInventoryLocally();
   renderInventoryTable();
   closeAddInventoryModal();
-  toast("📦 " + name + " toegevoegd aan voorraadlijst!");
+  toast("📦 " + name + " toegevoegd!");
+}
+
+// CADEAUBONNEN BEHEER
+function renderGiftCardTable() {
+  const tbody = document.getElementById("giftCardTableBody");
+  if (!tbody) return;
+  tbody.innerHTML = giftCards.map(g => `
+    <tr>
+      <td><b>${g.code}</b></td>
+      <td><span style="font-size:15px;font-weight:bold;color:#15803d">${money(g.current_balance)}</span></td>
+      <td>${money(g.initial_balance)}</td>
+      <td><span style="font-weight:bold;color:${g.is_active ? '#15803d' : '#dc2626'}">${g.is_active ? '🟢 Actief' : '🔴 Geblokkeerd'}</span></td>
+      <td>
+        <button onclick="topUpGiftCard(${g.id}, 10)" style="padding:4px 8px;border:1px solid #ccc;border-radius:6px;cursor:pointer;font-weight:bold;">+€10</button>
+        <button onclick="topUpGiftCard(${g.id}, 25)" style="padding:4px 8px;border:1px solid #0066ff;background:#0066ff;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;">+€25</button>
+        <button onclick="deleteGiftCard(${g.id})" style="border:none;background:#ffd8d5;color:#da291c;border-radius:6px;padding:4px 8px;cursor:pointer">🗑️</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function topUpGiftCard(id, amount) {
+  const card = giftCards.find(g => g.id === id);
+  if (card) {
+    card.current_balance += amount;
+    saveGiftCardsLocally();
+    renderGiftCardTable();
+    if (online && supabaseClient) supabaseClient.from("gift_cards").update({ current_balance: card.current_balance }).eq("id", card.id);
+    toast(`💳 Cadeaubon ${card.code} opgewaardeerd met ${money(amount)}!`);
+  }
+}
+
+async function createGiftCard() {
+  const code = document.getElementById("newGiftCardCode").value.trim().toUpperCase();
+  const amount = parseFloat(document.getElementById("newGiftCardAmount").value);
+  if (!code || isNaN(amount) || amount <= 0) return alert("Voer een geldige code en saldo in!");
+
+  const newCard = { id: Date.now(), code, initial_balance: amount, current_balance: amount, is_active: true };
+  giftCards.push(newCard);
+  saveGiftCardsLocally();
+  renderGiftCardTable();
+  if (online && supabaseClient) await supabaseClient.from("gift_cards").insert(newCard);
+  document.getElementById("newGiftCardCode").value = "";
+  document.getElementById("newGiftCardAmount").value = "";
+  toast(`💳 Cadeaubon ${code} (${money(amount)}) aangemaakt!`);
+}
+
+async function deleteGiftCard(id) {
+  if (confirm("Cadeaubon verwijderen?")) {
+    giftCards = giftCards.filter(g => g.id !== id);
+    saveGiftCardsLocally();
+    renderGiftCardTable();
+    if (online && supabaseClient) await supabaseClient.from("gift_cards").delete().eq("id", id);
+    toast("Cadeaubon verwijderd");
+  }
 }
 
 function updateAll() {
@@ -1992,6 +2128,7 @@ function updateAll() {
   renderPickup();
   renderManager();
   renderInventoryTable();
+  renderGiftCardTable();
   cartOrder.textContent = `#${orderNo}`;
   orderNoEl.textContent = `Volgende: #${orderNo}`;
   updateStoreStatusUI();
@@ -2009,10 +2146,6 @@ function renderProductTable() {
       <td><button onclick="openEditProductModal(${p.id})" style="border:none;background:#e2e8f0;border-radius:6px;padding:4px 8px;cursor:pointer;font-weight:bold;">✏️</button></td>
     </tr>
   `).join("");
-
-  const opts = products.map(p => `<option value="${p.name}">${p.emoji} ${p.name}</option>`).join("");
-  const sel1 = document.getElementById("newCouponTargetProduct");
-  if (sel1) sel1.innerHTML = opts;
 }
 
 function toggleProductSale(id) {
@@ -2148,33 +2281,18 @@ async function createUser() {
 }
 
 // SLIMME COUPONS BEHEER
-function toggleCouponExtraFields() {
-  const type = document.getElementById("newCouponType").value;
-  document.getElementById("couponTargetProductGroup").style.display = (type === "product") ? "block" : "none";
-  document.getElementById("couponThresholdGroup").style.display = (type === "threshold") ? "block" : "none";
-}
-
 function renderCouponTable() {
   const tbody = document.getElementById("couponTableBody");
   if (!tbody) return;
-  tbody.innerHTML = coupons.map(c => {
-    let cond = "-";
-    if (c.discount_type === "product") cond = "Geldig op " + (c.target_product_name || 'Product');
-    if (c.discount_type === "threshold") cond = "Vanaf " + money(c.min_subtotal || 0);
-
-    return `
-      <tr>
-        <td><b>${c.code}</b></td>
-        <td>${c.discount_type === 'percent' ? 'Percentage' : (c.discount_type === 'product' ? 'Productkorting' : (c.discount_type === 'threshold' ? 'Drempelkorting' : 'Vast'))}</td>
-        <td>${c.discount_type === 'percent' ? c.discount_val + '%' : money(c.discount_val)}</td>
-        <td><small>${cond}</small></td>
-        <td><button onclick="toggleCouponActive(${c.id})" style="border:none;background:${c.is_active !== false ? '#dcfce7' : '#fee2e2'};color:${c.is_active !== false ? '#0066ff' : '#64748b'};padding:3px 6px;border-radius:4px;font-weight:bold;cursor:pointer">${c.is_active !== false ? '🟢 Actief' : '🔴 Uit'}</button></td>
-        <td>
-          <button onclick="deleteCoupon(${c.id})" style="border:none;background:#ffd8d5;color:#da291c;border-radius:4px;padding:3px 6px;cursor:pointer">🗑️</button>
-        </td>
-      </tr>
-    `;
-  }).join("");
+  tbody.innerHTML = coupons.map(c => `
+    <tr>
+      <td><b>${c.code}</b></td>
+      <td>${c.discount_type === 'percent' ? 'Percentage' : 'Vast'}</td>
+      <td>${c.discount_type === 'percent' ? c.discount_val + '%' : money(c.discount_val)}</td>
+      <td><button onclick="toggleCouponActive(${c.id})" style="border:none;background:${c.is_active !== false ? '#dcfce7' : '#fee2e2'};color:${c.is_active !== false ? '#0066ff' : '#64748b'};padding:3px 6px;border-radius:4px;font-weight:bold;cursor:pointer">${c.is_active !== false ? '🟢 Actief' : '🔴 Uit'}</button></td>
+      <td><button onclick="deleteCoupon(${c.id})" style="border:none;background:#ffd8d5;color:#da291c;border-radius:4px;padding:3px 6px;cursor:pointer">🗑️</button></td>
+    </tr>
+  `).join("");
 }
 
 function toggleCouponActive(id) {
@@ -2190,12 +2308,10 @@ async function createCoupon() {
   const code = document.getElementById("newCouponCode").value.trim().toUpperCase();
   const type = document.getElementById("newCouponType").value;
   const val = parseFloat(document.getElementById("newCouponVal").value);
-  const targetProduct = document.getElementById("newCouponTargetProduct").value || null;
-  const minSubtotal = parseFloat(document.getElementById("newCouponMinSubtotal").value) || 0;
 
   if (!code || isNaN(val) || val <= 0) return alert("Vul een geldige code en waarde in!");
 
-  const newCouponObj = { code, discount_type: type, discount_val: val, target_product_name: targetProduct, min_subtotal: minSubtotal, is_active: true };
+  const newCouponObj = { code, discount_type: type, discount_val: val, is_active: true };
   if (online && supabaseClient) {
     const { data } = await supabaseClient.from("coupons").insert(newCouponObj).select();
     if (data && data[0]) coupons.push(data[0]);
@@ -2229,6 +2345,8 @@ function openZReport() {
     <div class="receipt-row"><span>Gegeven Korting:</span><span>${money(stats.discounts)}</span></div>
     <div class="receipt-line"></div>
     <div class="receipt-row" style="font-size:15px;font-weight:bold"><span>BRUTO OMZET:</span><span>${money(stats.revenue)}</span></div>
+    <div class="receipt-row" style="color:red"><span>Totale Inkoopkosten:</span><span>- ${money(totalExpenses)}</span></div>
+    <div class="receipt-row" style="font-size:15px;font-weight:bold;color:green"><span>NETTOWINST:</span><span>${money(Math.max(0, stats.revenue - totalExpenses))}</span></div>
   `;
   document.getElementById("zReportModalBackdrop").classList.add("show");
 }
@@ -2255,11 +2373,11 @@ function toast(s) {
 function confirmResetDemo() {
   if (!hasPerm("reset")) return toast("🔒 Geen rechten!");
   showConfirmDialog("Systeem Reset", "Weet je zeker dat je alle bestellingen en statistieken wilt wissen?", async () => {
-    orders = []; stats = { revenue: 0, sales: 0, items: 0, discounts: 0 }; orderNo = 1001;
+    orders = []; stats = { revenue: 0, sales: 0, items: 0, discounts: 0 }; totalExpenses = 0; orderNo = 1001;
     save(); updateAll();
     if (online && supabaseClient) await supabaseClient.from("orders").delete().neq("id", 0);
     broadcastEvent("STORE_RESET", {});
-    toast("♻️ Gereset");
+    toast("♻️ Systeem gereset");
   });
 }
 
@@ -2280,6 +2398,10 @@ window.addEventListener("storage", (e) => {
     inventory = JSON.parse(e.newValue || "[]");
     renderInventoryTable();
   }
+  if (e.key === "wd_gift_cards") {
+    giftCards = JSON.parse(e.newValue || "[]");
+    renderGiftCardTable();
+  }
 });
 
 // Navigatie
@@ -2299,6 +2421,8 @@ const ordersEl = document.getElementById("orders");
 const newCountEl = document.getElementById("newCount");
 const historyEl = document.getElementById("history");
 const revenue = document.getElementById("revenue");
+const mgrExpenses = document.getElementById("mgrExpenses");
+const mgrNetProfit = document.getElementById("mgrNetProfit");
 const sales = document.getElementById("sales");
 const itemsSold = document.getElementById("itemsSold");
 const discountsGiven = document.getElementById("discountsGiven");
