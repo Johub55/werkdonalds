@@ -927,8 +927,30 @@ const defaultProducts = [
   ["Curry Saus", 0.80, 0, false, "Sauzen & Dips", "🥫"]
 ].map((p, i) => ({ id: i, name: p[0], price: p[1], salePrice: p[2] || 0, onSale: p[3] === true, cat: p[4], emoji: p[5], inStock: true }));
 
-let savedProds = JSON.parse(localStorage.getItem("wd_custom_products") || "null");
-let products = (savedProds && savedProds.length >= defaultProducts.length) ? savedProds : defaultProducts;
+function cloneProducts(items) {
+  return Array.isArray(items)
+    ? items.map(product => ({ ...product }))
+    : [];
+}
+
+function loadSavedProducts() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("wd_custom_products") || "null"
+    );
+
+    return Array.isArray(saved) ? cloneProducts(saved) : [];
+  } catch (error) {
+    console.warn("Ongeldige opgeslagen producten gevonden.", error);
+    return [];
+  }
+}
+
+const savedProds = loadSavedProducts();
+
+let products = savedProds.length
+  ? savedProds
+  : cloneProducts(defaultProducts);
 
 const money = n => new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(n);
 
@@ -1820,16 +1842,62 @@ async function fetchOrdersFromDB() {
 
 async function fetchProductsFromDB() {
   if (!supabaseClient) return;
+
   try {
-    const { data } = await supabaseClient.from("products").select("*");
-    if (data && data.length > 0) {
-      products = data.map(p => ({ id: p.id, name: p.name, price: Number(p.price), salePrice: Number(p.sale_price || 0), onSale: p.on_sale === true, cat: p.cat, emoji: p.emoji, inStock: p.in_stock !== false }));
-      save();
-      renderCats();
-      renderProducts();
-      renderProductTable();
+    const { data, error } = await supabaseClient
+      .from("products")
+      .select("*");
+
+    if (error) {
+      console.warn("Producten konden niet uit Supabase worden geladen:", error);
+      return;
     }
-  } catch(e){}
+
+    const dbProducts = Array.isArray(data)
+      ? data.map(p => ({
+          id: p.id,
+          name: p.name,
+          price: Number(p.price || 0),
+          salePrice: Number(p.sale_price || 0),
+          onSale: p.on_sale === true,
+          cat: p.cat || "Burgers & Wraps",
+          emoji: p.emoji || "🍔",
+          inStock: p.in_stock !== false
+        }))
+      : [];
+
+    const localProducts = loadSavedProducts();
+
+    /*
+     * Mergevolgorde:
+     * 1. Standaardproducten blijven behouden
+     * 2. Lokale producten worden toegevoegd
+     * 3. Supabase-producten overschrijven dezelfde product-ID's
+     */
+    const mergedProducts = new Map();
+
+    cloneProducts(defaultProducts).forEach(product => {
+      mergedProducts.set(String(product.id), product);
+    });
+
+    localProducts.forEach(product => {
+      mergedProducts.set(String(product.id), product);
+    });
+
+    dbProducts.forEach(product => {
+      mergedProducts.set(String(product.id), product);
+    });
+
+    products = Array.from(mergedProducts.values());
+
+    save();
+    renderCats();
+    renderProducts();
+    renderProductTable();
+
+  } catch (error) {
+    console.warn("Fout bij laden van producten:", error);
+  }
 }
 
 async function fetchGiftCardsFromDB() {
@@ -2235,36 +2303,137 @@ async function saveProductEdit() {
 }
 
 async function addNewProduct() {
-  if (!hasPerm("products")) return toast("🔒 Geen rechten!");
-  const name = document.getElementById("newProdName")?.value.trim() || "";
-  const price = parseFloat(document.getElementById("newProdPrice")?.value);
-  const salePrice = parseFloat(document.getElementById("newProdSalePrice")?.value) || 0;
-  const cat = document.getElementById("newProdCat")?.value || "Burgers & Wraps";
-  const emoji = document.getElementById("newProdEmoji")?.value.trim() || "🍔";
+  // Check whether the current user may manage products
+  if (!hasPerm("products")) {
+    return toast("🔒 Geen rechten!");
+  }
 
-  if (!name || isNaN(price) || price <= 0) return alert("Vul een geldige naam en prijs in!");
+  // Read values from the form
+  const name =
+    document.getElementById("newProdName")?.value.trim() || "";
 
-  const newP = { id: Date.now(), name, price, salePrice, onSale: (salePrice > 0), cat, emoji, inStock: true };
-  products.push(newP);
+  const price = parseFloat(
+    document.getElementById("newProdPrice")?.value
+  );
+
+  const salePriceInput =
+    document.getElementById("newProdSalePrice")?.value.trim() || "";
+
+  const salePrice =
+    salePriceInput === "" ? 0 : parseFloat(salePriceInput);
+
+  const cat =
+    document.getElementById("newProdCat")?.value ||
+    "Burgers & Wraps";
+
+  const emoji =
+    document.getElementById("newProdEmoji")?.value.trim() || "🍔";
+
+  // Validate required fields
+  if (!name) {
+    return alert("Vul een productnaam in!");
+  }
+
+  if (isNaN(price) || price <= 0) {
+    return alert("Vul een geldige reguliere prijs in!");
+  }
+
+  if (isNaN(salePrice) || salePrice < 0) {
+    return alert("Vul een geldige actieprijs in!");
+  }
+
+  if (salePrice > price) {
+    return alert(
+      "De actieprijs mag niet hoger zijn dan de reguliere prijs!"
+    );
+  }
+
+  // Create the new product
+  const newProduct = {
+    id: Date.now(),
+    name: name,
+    price: price,
+    salePrice: salePrice,
+    onSale: salePrice > 0,
+    cat: cat,
+    emoji: emoji,
+    inStock: true
+  };
+
+  /*
+   * Important:
+   * Add the new product to the existing list.
+   *
+   * Do NOT use:
+   * products = [newProduct];
+   *
+   * That would delete all existing products from the local list.
+   */
+  products = [...products, newProduct];
+
+  // Save the complete product list locally
   save();
-  if (online && supabaseClient) await supabaseClient.from("products").insert({ id: newP.id, name: newP.name, price: newP.price, sale_price: newP.salePrice, on_sale: newP.onSale, cat: newP.cat, emoji: newP.emoji, in_stock: true });
 
+  // Save the new product in Supabase when online
+  if (online && supabaseClient) {
+    const { error } = await supabaseClient
+      .from("products")
+      .insert({
+        id: newProduct.id,
+        name: newProduct.name,
+        price: newProduct.price,
+        sale_price: newProduct.salePrice,
+        on_sale: newProduct.onSale,
+        cat: newProduct.cat,
+        emoji: newProduct.emoji,
+        in_stock: newProduct.inStock
+      });
+
+    if (error) {
+      console.error("Supabase product error:", error);
+
+      toast(
+        "⚠️ Product lokaal opgeslagen, maar niet naar Supabase gesynchroniseerd."
+      );
+    }
+  }
+
+  // Refresh the visible menu and manager table
   renderCats();
   renderProducts();
   renderProductTable();
-  const nInp = document.getElementById("newProdName"); if (nInp) nInp.value = "";
-  const pInp = document.getElementById("newProdPrice"); if (pInp) pInp.value = "";
-  const sInp = document.getElementById("newProdSalePrice"); if (sInp) sInp.value = "";
+
+  // Clear the input fields
+  const nameInput = document.getElementById("newProdName");
+  const priceInput = document.getElementById("newProdPrice");
+  const saleInput = document.getElementById("newProdSalePrice");
+
+  if (nameInput) nameInput.value = "";
+  if (priceInput) priceInput.value = "";
+  if (saleInput) saleInput.value = "";
+
   toast("🎉 " + name + " toegevoegd!");
 }
-
 function resetDefaultPrices() {
-  if (!hasPerm("products")) return toast("🔒 Geen rechten!");
-  showConfirmDialog("Menulijst Herstellen", "Wil je alle gerechten resetten naar de standaardlijst?", () => {
-    products = defaultProducts;
-    save(); renderCats(); renderProducts(); renderProductTable();
-    toast("🔄 Menu hersteld!");
-  });
+  if (!hasPerm("products")) {
+    return toast("🔒 Geen rechten!");
+  }
+
+  showConfirmDialog(
+    "Menulijst Herstellen",
+    "Wil je alle gerechten resetten naar de standaardlijst?",
+    () => {
+      // Maak een kopie, gebruik niet rechtstreeks defaultProducts
+      products = cloneProducts(defaultProducts);
+
+      save();
+      renderCats();
+      renderProducts();
+      renderProductTable();
+
+      toast("🔄 Menu hersteld!");
+    }
+  );
 }
 
 function renderUserTable() {
